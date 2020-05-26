@@ -33,9 +33,9 @@ class PostgresDB:
                     origem_registro = 'W'
                     identificador_estabelecimento_saude = 5
                     # TRASFORMAR DATA DE NASCIMENTO
-                    patientbirthdate = estudo['paciente_data_nascimento'].replace(
-                        '/', '')
-
+                    patientbirthdate = estudo['paciente_data_nascimento'].split(
+                        '/')
+                    patientbirthdate = f"{patientbirthdate[2]}{patientbirthdate[1]}{patientbirthdate[0]}"
                     # TRATAR STUDYDATE
                     atendimento_datahora = estudo['atendimento_datahora'].split(
                         ' ')
