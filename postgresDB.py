@@ -122,7 +122,7 @@ class PostgresDB:
             '%s' ,'%s' ,'%s' ,
             '%s' ,'%s' ,'%s' ,
             '%s','%s', %s,
-            '%s','%s')"""
+            %s,'%s')"""
                     % (exame.accessionnumber, exame.patientname, exame.patientid,
                        exame.patientsex, exame.patientbirthdate.split(' ')[
                            0], exame.studyid,
