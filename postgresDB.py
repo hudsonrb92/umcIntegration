@@ -36,27 +36,28 @@ class PostgresDB:
                         estudo['paciente_data_nascimento'].split('/')[1]), int(estudo['paciente_data_nascimento'].split('/')[0]))
 
                     # TRATAR STUDYDATE
-                    studydate = datetime(int(estudo['atendimento_datahora'].split(' ')[0].split('/')[2]),
-                                         int(estudo['atendimento_datahora'].split(
+                    studydate = str(estudo['atendimento_datahora'].split(' ')[
+                                    0].split('/')[2]),
+                                         str(estudo['atendimento_datahora'].split(
                                              ' ')[0].split('/')[1]),
-                                         int(estudo['atendimento_datahora'].split(' ')[0].split('/')[0]))
-                    studytime = estudo['atendimento_datahora'].split(' ')[1]
+                                         str(estudo['atendimento_datahora'].split(' ')[0].split('/')[0]))
+                    studytime=estudo['atendimento_datahora'].split(' ')[1]
 
-                    estudo_dicom = EstudoDicom()
-                    estudo_dicom.studyinstanceuid = studyinstanceuid
-                    estudo_dicom.studydate = studydate
-                    estudo_dicom.patientname = patientname
-                    estudo_dicom.imagens_disponiveis = imagens_disponiveis
-                    estudo_dicom.origem_registro = origem_registro
-                    estudo_dicom.accessionnumber = accessionnumber
-                    estudo_dicom.patientid = patientid
-                    estudo_dicom.patientsex = patientsex
-                    estudo_dicom.studyid = studyid
-                    estudo_dicom.studydescription = studydescription
-                    estudo_dicom.modalitiesinstudy = modalitiesinstudy
-                    estudo_dicom.identificador_estabelecimento_saude = identificador_estabelecimento_saude
-                    estudo_dicom.patientbirthdate = patientbirthdate
-                    estudo_dicom.studytime = studytime
+                    estudo_dicom=EstudoDicom()
+                    estudo_dicom.studyinstanceuid=studyinstanceuid
+                    estudo_dicom.studydate=studydate
+                    estudo_dicom.patientname=patientname
+                    estudo_dicom.imagens_disponiveis=imagens_disponiveis
+                    estudo_dicom.origem_registro=origem_registro
+                    estudo_dicom.accessionnumber=accessionnumber
+                    estudo_dicom.patientid=patientid
+                    estudo_dicom.patientsex=patientsex
+                    estudo_dicom.studyid=studyid
+                    estudo_dicom.studydescription=studydescription
+                    estudo_dicom.modalitiesinstudy=modalitiesinstudy
+                    estudo_dicom.identificador_estabelecimento_saude=identificador_estabelecimento_saude
+                    estudo_dicom.patientbirthdate=patientbirthdate
+                    estudo_dicom.studytime=studytime
                     estudo_criados.append(estudo_dicom)
                 # Caso exista passa-lo para criado on radiusls
             return estudo_criados
