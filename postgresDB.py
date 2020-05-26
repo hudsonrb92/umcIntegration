@@ -2,7 +2,7 @@ from database import CursorFromConnectionFromPool
 from datetime import datetime
 from estudo_dicom import EstudoDicom
 from mongoDB import WorkListMV
-import psycopg2
+from datetime import date
 
 
 class PostgresDB:
@@ -39,16 +39,13 @@ class PostgresDB:
                     # TRATAR STUDYDATE
                     atendimento_datahora = estudo['atendimento_datahora'].split(
                         ' ')
-                    studyDateArr = atendimento_datahora[0].split('/')
-                    studydate = str(studyDateArr[2] + '-' +
-                                    studyDateArr[1] + '-' + studyDateArr[0])
-                    studyDatePsy = psycopg2.Date(int(studyDateArr[2]), int(
-                        studyDateArr[1]), int(studyDateArr[0]))
+                    studydate = date(exame['atendimento_datahora'].split(' ')[0].split(
+                        '/')[2], exame['atendimento_datahora'].split(' ')[0].split('/')[1], exame['atendimento_datahora'].split(' ')[0].split('/')[0])
                     studyTime = atendimento_datahora[1]
 
                     estudo_dicom = EstudoDicom()
                     estudo_dicom.studyinstanceuid = studyinstanceuid
-                    estudo_dicom.studydate = studyDatePsy
+                    estudo_dicom.studydate = studydate
                     estudo_dicom.patientname = patientname
                     estudo_dicom.imagens_disponiveis = imagens_disponiveis
                     estudo_dicom.origem_registro = origem_registro
