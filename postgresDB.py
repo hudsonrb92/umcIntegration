@@ -85,11 +85,11 @@ class PostgresDB:
             identificador_estabelecimento_saude,
             studydate,
             studytime)
-            VALUES ('%s', '%s', '%s',
-            '%s','%s','%s',
-            '%s','%s', '%s',
-            '%s','%s',%s
-            ,'%s','%s')'"""
+            VALUES ('%s' ,'%s','%s' ,
+            '%s' ,'%s' ,'%s' ,
+            '%s' ,'%s' ,'%s' ,
+            '%s','%s', %s,
+            '%s','%s')"""
                                % (exame.accessionnumber, exame.patientname, exame.patientid,
                                   exame.patientsex, exame.patientbirthdate, exame.studyid,
                                   exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
@@ -102,4 +102,29 @@ class PostgresDB:
                 WorkListMV().update_to_created(exame.accessionnumber)
             finally:
                 print(
-                    f'Fim da execução do exame {exame.accessionnumber}\n ->> {exame.patientname}')
+                    """
+            INSERT INTO radius_taas.estudo_dicom
+            (accessionnumber,
+            patientname,
+            patientid,
+            patientsex,
+            patientbirthdate,
+            studyid,
+            studyinstanceuid,
+            studydescription,
+            modalitiesinstudy,
+            imagens_disponiveis,
+            origem_registro,
+            identificador_estabelecimento_saude,
+            studydate,
+            studytime)
+            VALUES ('%s' ,'%s','%s' ,
+            '%s' ,'%s' ,'%s' ,
+            '%s' ,'%s' ,'%s' ,
+            '%s','%s', %s,
+            '%s','%s')"""
+                    % (exame.accessionnumber, exame.patientname, exame.patientid,
+                       exame.patientsex, exame.patientbirthdate, exame.studyid,
+                       exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
+                       exame.imagens_disponiveis, exame.origem_registro, exame.identificador_estabelecimento_saude,
+                       exame.studydate, exame.studytime))
