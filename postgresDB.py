@@ -33,8 +33,8 @@ class PostgresDB:
                     origem_registro = 'W'
                     identificador_estabelecimento_saude = 5
                     # TRASFORMAR DATA DE NASCIMENTO
-                    patientbirthdate = datetime(int(estudo['paciente_data_nascimento'].split('/')[2]), int(
-                        estudo['paciente_data_nascimento'].split('/')[1]), int(estudo['paciente_data_nascimento'].split('/')[0]))
+                    patientbirthdate = estudo['paciente_data_nascimento'].replace(
+                        '/', '')
 
                     # TRATAR STUDYDATE
                     atendimento_datahora = estudo['atendimento_datahora'].split(
@@ -97,35 +97,9 @@ class PostgresDB:
                                   exame.studydate, exame.studytime))
 
             except Exception as e:
-                print(e)
+                print(f'Erro : {e}')
             else:
+                print("Execução feita com sucesso.")
                 WorkListMV().update_to_created(exame.accessionnumber)
             finally:
-                print(
-                    """
-            INSERT INTO radius_taas.estudo_dicom
-            (accessionnumber,
-            patientname,
-            patientid,
-            patientsex,
-            patientbirthdate,
-            studyid,
-            studyinstanceuid,
-            studydescription,
-            modalitiesinstudy,
-            imagens_disponiveis,
-            origem_registro,
-            identificador_estabelecimento_saude,
-            studydate,
-            studytime)
-            VALUES ('%s' ,'%s','%s' ,
-            '%s' ,'%s' ,'%s' ,
-            '%s' ,'%s' ,'%s' ,
-            '%s','%s', %s,
-            %s,'%s')"""
-                    % (exame.accessionnumber, exame.patientname, exame.patientid,
-                       exame.patientsex, exame.patientbirthdate.split(' ')[
-                           0], exame.studyid,
-                       exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
-                       exame.imagens_disponiveis, exame.origem_registro, exame.identificador_estabelecimento_saude,
-                       exame.studydate, exame.studytime))
+                print('Fim da Execução')
