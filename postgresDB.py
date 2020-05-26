@@ -2,7 +2,7 @@ from database import CursorFromConnectionFromPool
 from datetime import datetime
 from estudo_dicom import EstudoDicom
 from mongoDB import WorkListMV
-from datetime import date
+from psycopg2 import Date
 
 
 class PostgresDB:
@@ -39,7 +39,7 @@ class PostgresDB:
                     # TRATAR STUDYDATE
                     atendimento_datahora = estudo['atendimento_datahora'].split(
                         ' ')
-                    studydate = date(int(estudo['atendimento_datahora'].split(' ')[0].split('/')[2]),
+                    studydate = Date(int(estudo['atendimento_datahora'].split(' ')[0].split('/')[2]),
                                      int(estudo['atendimento_datahora'].split(
                                          ' ')[0].split('/')[1]),
                                      int(estudo['atendimento_datahora'].split(' ')[0].split('/')[0]))
