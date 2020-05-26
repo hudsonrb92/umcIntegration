@@ -65,7 +65,7 @@ class PostgresDB:
     def insert_on_db(exame):
         with CursorFromConnectionFromPool() as cursor:
             try:
-                cursor.execute(f"""
+                cursor.execute("""
             INSERT INTO radius_taas.estudo_dicom
             (accessionnumber,
             patientname,
@@ -81,21 +81,12 @@ class PostgresDB:
             identificador_estabelecimento_saude,
             studydate,
             studytime)
-            VALUES (
-            '{exame.accessionnumber}',
-            '{exame.patientname}',
-            '{exame.patientid}',
-            '{exame.patientsex}',
-            '{exame.patientbirthdate}',
-            '{exame.studyid}',
-            '{exame.studyinstanceuid}',
-            '{exame.studydescription}',
-            '{exame.modalitiesinstudy}',
-            {exame.imagens_disponiveis},
-            '{exame.origem_registro}',
-            {exame.identificador_estabelecimento_saude},
-            '{exame.studydate}',
-            '{exame.studytime}')""")
+            VALUES ('%s', '%s', '%s', '%s','%s','%s','%s','%s', %s, '%s',%s , '%s','%s)'"""
+                               % (exame.accessionnumber, exame.patientname, exame.patientid,
+                                  exame.patientsex, exame.patientbirthdate, exame.studyid,
+                                  exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
+                                  exame.imagens_disponiveis, exame.origem_registro, exame.identificador_estabelecimento_saude,
+                                  exame.studydate, exame.studytime))
 
             except Exception as e:
                 print(e)
