@@ -86,7 +86,7 @@ class PostgresDB:
             '%s' ,'%s' ,'%s' ,
             '%s' ,'%s' ,'%s' ,
             '%s','%s', %s,
-            '%s','%s')"""
+            %s,'%s')"""
                                % (exame.accessionnumber, exame.patientname, exame.patientid,
                                   exame.patientsex, exame.patientbirthdate, exame.studyid,
                                   exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
