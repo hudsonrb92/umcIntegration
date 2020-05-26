@@ -124,7 +124,8 @@ class PostgresDB:
             '%s','%s', %s,
             '%s','%s')"""
                     % (exame.accessionnumber, exame.patientname, exame.patientid,
-                       exame.patientsex, exame.patientbirthdate, exame.studyid,
+                       exame.patientsex, exame.patientbirthdate.split(' ')[
+                           0], exame.studyid,
                        exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
                        exame.imagens_disponiveis, exame.origem_registro, exame.identificador_estabelecimento_saude,
                        exame.studydate, exame.studytime))
