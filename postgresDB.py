@@ -2,6 +2,7 @@ from database import CursorFromConnectionFromPool
 from datetime import datetime
 from estudo_dicom import EstudoDicom
 from mongoDB import WorkListMV
+from psycopg2
 
 
 class PostgresDB:
@@ -36,15 +37,18 @@ class PostgresDB:
                         estudo['paciente_data_nascimento'].split('/')[1]), int(estudo['paciente_data_nascimento'].split('/')[0]))
 
                     # TRATAR STUDYDATE
-                    studydate = str(estudo['atendimento_datahora'].split(' ')[
-                                    0].split('/')[2]), str(estudo['atendimento_datahora'].split(' ')[0].split('/')[1]),
-                    str(estudo['atendimento_datahora'].split(
-                        ' ')[0].split('/')[0])
-                    studytime = estudo['atendimento_datahora'].split(' ')[1]
+                    atendimento_datahora = estudo['atendimento_datahora'].split(
+                        ' ')
+                    studyDateArr = atendimento_datahora[0].split('/')
+                    studydate = str(studyDateArr[2] + '-' +
+                                    studyDateArr[1] + '-' + studyDateArr[0])
+                    studyDatePsy = psycopg2.Date(int(studyDateArr[2]), int(
+                        studyDateArr[1]), int(studyDateArr[0]))
+                    studyTime = atendimento_datahora[1]
 
                     estudo_dicom = EstudoDicom()
                     estudo_dicom.studyinstanceuid = studyinstanceuid
-                    estudo_dicom.studydate = studydate
+                    estudo_dicom.studydate = studyDatePsy
                     estudo_dicom.patientname = patientname
                     estudo_dicom.imagens_disponiveis = imagens_disponiveis
                     estudo_dicom.origem_registro = origem_registro
@@ -56,7 +60,7 @@ class PostgresDB:
                     estudo_dicom.modalitiesinstudy = modalitiesinstudy
                     estudo_dicom.identificador_estabelecimento_saude = identificador_estabelecimento_saude
                     estudo_dicom.patientbirthdate = patientbirthdate
-                    estudo_dicom.studytime = studytime
+                    estudo_dicom.studytime = studyTime
                     estudo_criados.append(estudo_dicom)
                 # Caso exista passa-lo para criado on radiusls
             return estudo_criados
