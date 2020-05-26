@@ -39,9 +39,10 @@ class PostgresDB:
                     # TRATAR STUDYDATE
                     atendimento_datahora = estudo['atendimento_datahora'].split(
                         ' ')
-                    studydate = date(exame['atendimento_datahora'].split(' ')[0].split(
-                        '/')[2], exame['atendimento_datahora'].split(' ')[0].split('/')[1], exame['atendimento_datahora'].split(' ')[0].split('/')[0])
-                    studyTime = atendimento_datahora[1]
+                    studydate = date(int(estudo['atendimento_datahora'].split(' ')[0].split('/')[2]),
+                                     int(estudo['atendimento_datahora'].split(
+                                         ' ')[0].split('/')[1]),
+                                     int(estudo['atendimento_datahora'].split(' ')[0].split('/')[0]))
 
                     estudo_dicom = EstudoDicom()
                     estudo_dicom.studyinstanceuid = studyinstanceuid
