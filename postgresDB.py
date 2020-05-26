@@ -2,7 +2,7 @@ from database import CursorFromConnectionFromPool
 from datetime import datetime
 from estudo_dicom import EstudoDicom
 from mongoDB import WorkListMV
-from psycopg2
+import psycopg2
 
 
 class PostgresDB:
@@ -85,7 +85,11 @@ class PostgresDB:
             identificador_estabelecimento_saude,
             studydate,
             studytime)
-            VALUES ('%s', '%s', '%s', '%s','%s','%s','%s','%s', %s, '%s',%s , '%s','%s)'"""
+            VALUES ('%s', '%s', '%s',
+            '%s','%s','%s',
+            '%s','%s', '%s',
+            '%s','%s',%s
+            ,'%s','%s')'"""
                                % (exame.accessionnumber, exame.patientname, exame.patientid,
                                   exame.patientsex, exame.patientbirthdate, exame.studyid,
                                   exame.studyinstanceuid, exame.studydescription, exame.modalitiesinstudy,
