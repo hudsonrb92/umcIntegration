@@ -1,4 +1,5 @@
 ./umcintegra/
+config.ini
 .idea/IntegracaoUmcWl.iml
 .idea/misc.xml
 .idea/modules.xml
