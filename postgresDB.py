@@ -86,7 +86,8 @@ class PostgresDB:
                 ProfissionalSaudeModel.registro_conselho_trabalho == exame.medico_solicitante_conselho_uf).filter(
                 ProfissionalSaudeModel.identificador_pessoa == PessoaModel.identificador).filter(
                 PessoaModel.nome == exame.medico_solicitante_nome).first().identificador
-        else:
+
+        if identificador_profissional_saude_solicitante != None:
             try:
                 nova_pessoa_soliciante = PessoaModel(nome=exame.medico_solicitante_nome, ativo=True)
                 sessao.add(nova_pessoa_soliciante)
