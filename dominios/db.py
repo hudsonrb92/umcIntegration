@@ -1,5 +1,3 @@
-from sqlite3.dbapi2 import Time
-
 from sqlalchemy import Column, String, DateTime, Integer, Boolean, ForeignKey, LargeBinary, Text, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
@@ -511,7 +509,7 @@ class RelatorioProdutividadeModel(Base):
     __tablename__ = "relatorio_produtividade"
 
     identificador = Column(Integer, primary_key=True)
-    data_hora_geracao = Column(Time, nullable=False)
+    data_hora_geracao = Column(DateTime, nullable=False)
     data_inicio_referencia = Column(Date, nullable=False, default=now())
     data_fim_referencia = Column(Date, nullable=False)
     identificador_estabelecimento_saude = Column(Integer, nullable=True)
