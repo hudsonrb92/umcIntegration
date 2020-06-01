@@ -9,5 +9,3 @@ estudos = PostgresDB.check_if_exists_on_radius(exames_worklist)
 for estudo in estudos:
     PostgresDB.insert_on_db(estudo)
     WorkListMV.update_to_created(estudo.accessionnumber)
-
-Database.close_all_connections()

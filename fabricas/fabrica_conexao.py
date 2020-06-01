@@ -11,12 +11,11 @@ class FabricaConexao():
         config.read('./config.ini')
 
         user = config['DATABASE']['user']
-        passwd = config['DATABASE']['passwd']
         host = config['DATABASE']['host']
         db = config['DATABASE']['db']
         port = config['DATABASE']['port']
 
-        engine = create_engine(f'postgresql://{user}:{passwd}@{host}:{port}/{db}')
+        engine = create_engine(f'postgresql://{user}@{host}:{port}/{db}')
 
         return engine
 

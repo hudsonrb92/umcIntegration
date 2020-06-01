@@ -92,11 +92,7 @@ class PostgresDB:
                 sessao.add(nova_pessoa_soliciante)
                 sessao.commit()
                 print(f"Entidade Pessoa Criada! {exame.medico_solicitante_nome}")
-            except Exception as e:
-                print(e)
-                sessao.rollback()
 
-            try:
                 identificador_pessoa_solicitante_nova = nova_pessoa_soliciante.identificador
                 identificador_estado_novo_medico_solicitante = sessao.query(EstadoModel).filter_by(
                     sigla=exame.medico_solicitante_conselho_uf).first().identificador
@@ -108,11 +104,8 @@ class PostgresDB:
                 sessao.commit()
                 print(f"Entidade Profissional Saude Criada! {exame.medico_solicitante_crm}")
                 identificador_profissional_saude_solicitante = novo_profissional_saude_solicitante.identificador
-            except Exception as e:
-                print(e)
-                sessao.rollback()
 
-            try:
+
                 login_solicitante = f"{str(exame.medico_solicitante_conselho_uf).lower()}{exame.medico_solicitante_crm}"
                 senha_solicitante = f"{exame.medico_solicitante_crm}"
                 senha_hasheada = hashlib.md5(senha_solicitante.encode('utf')).hexdigest()
@@ -122,11 +115,8 @@ class PostgresDB:
                 sessao.add(novo_usuario_solicitante)
                 sessao.commit()
                 print(f"Entidade Usuario Criado!")
-            except Exception as e:
-                print(e)
-                sessao.rollback()
 
-            try:
+
                 identificador_usuario_solicitante = novo_usuario_solicitante.identificador
                 hoje = datetime.now()
                 hoje_str = f"{hoje.year}-{hoje.month}-{hoje.day}"
