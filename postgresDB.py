@@ -98,7 +98,14 @@ class PostgresDB:
             except Exception as e:
                 print(f'Erro : {e}')
             else:
-                print("Execução feita com sucesso.")
+                hoje = hoje = datetime.now()
+                print(
+                    f"Paciente {exame.patientname} criado no RadiusTaas.\nProntuário {exame.patientid}")
+                print(
+                    f"Execução feita com sucesso -> {hoje.day}/{hoje.month}/{hoje.year} {hoje.hour}:{hoje.minute}:{hoje.second}")
                 WorkListMV().update_to_created(exame.accessionnumber)
             finally:
                 print('Fim da Execução')
+
+    @staticmethod
+    def relaciona_exame():
