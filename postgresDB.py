@@ -107,6 +107,7 @@ class PostgresDB:
                 sessao.add(novo_profissional_saude_solicitante)
                 sessao.commit()
                 print(f"Entidade Profissional Saude Criada! {exame.medico_solicitante_crm}")
+                identificador_profissional_saude_solicitante = novo_profissional_saude_solicitante.identificador
             except Exception as e:
                 print(e)
                 sessao.rollback()
@@ -156,15 +157,13 @@ class PostgresDB:
             print(f"Paciente {exame.patientname} criado no RadiusTaas.\nProntuário {exame.patientid}")
             print(
                 f"Execução feita com sucesso -> {hoje.day}/{hoje.month}/{hoje.year} {hoje.hour}:{hoje.minute}:{hoje.second}")
-
-        except Exception as e:
-            print(e)
-            sessao.rollback()
-        else:
             sessao.commit()
             exame_criado = sessao.query(EstudoDicomModel).filter_by(accessionnumber=exame.accessionnumber).first()
             if exame_criado:
                 WorkListMV().update_to_created(accessionnumber=exame.accessionnumber)
+        except Exception as e:
+            print(e)
+            sessao.rollback()
         finally:
             print('Fim da Execução')
             sessao.close()
