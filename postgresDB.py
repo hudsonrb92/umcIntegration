@@ -130,8 +130,12 @@ class PostgresDB:
             except Exception as e:
                 print(e)
                 sessao.rollback()
-        else:
-            identificador_profissional_saude_solicitante = profissional_saude_solicitante.identificador
+
+        profissional_saude_solicitante = sessao.query(ProfissionalSaudeModel).filter(
+            ProfissionalSaudeModel.registro_conselho_trabalho == exame.medico_solicitante_conselho_uf).filter(
+            ProfissionalSaudeModel.identificador_pessoa == PessoaModel.identificador).filter(
+            PessoaModel.nome == exame.medico_solicitante_nome).first()
+        identificador_profissional_saude_solicitante = profissional_saude_solicitante.identificador
 
         novo_estudo = EstudoDicomModel(accessionnumber=exame.accessionnumber, patientname=exame.patientname,
                                        patientid=exame.patientid, patientsex=exame.patientsex,
