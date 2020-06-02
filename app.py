@@ -5,6 +5,7 @@ from mongoDB import WorkListMV
 
 exames_worklist = WorkListMV().get_exames_not_created()
 estudos = PostgresDB.check_if_exists_on_radius(exames_worklist)
+print(len(estudos))
 
 for estudo in estudos:
     PostgresDB.insert_on_db(estudo)

@@ -74,7 +74,7 @@ class PostgresDB:
                 estudo_dicom.convenio_codigo_ans = convenio_codigo_ans
                 estudo_criados.append(estudo_dicom)
             # Caso exista passa-lo para criado on radiusls
-        sessao.close()
+            sessao.close()
         return estudo_criados
 
     @staticmethod
