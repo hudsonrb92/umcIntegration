@@ -82,12 +82,12 @@ class PostgresDB:
         fabrica = FabricaConexao()
         sessao = fabrica.criar_sessao()
         if exame.medico_solicitante_nome:
-            identificador_profissional_saude_solicitante = sessao.query(ProfissionalSaudeModel).filter(
+            profissional_saude_solicitante = sessao.query(ProfissionalSaudeModel).filter(
                 ProfissionalSaudeModel.registro_conselho_trabalho == exame.medico_solicitante_conselho_uf).filter(
                 ProfissionalSaudeModel.identificador_pessoa == PessoaModel.identificador).filter(
-                PessoaModel.nome == exame.medico_solicitante_nome).first().identificador
+                PessoaModel.nome == exame.medico_solicitante_nome).first()
 
-        if identificador_profissional_saude_solicitante != None:
+        if hasattr(profissional_saude_solicitante, 'identificador') == False:
             try:
                 nova_pessoa_soliciante = PessoaModel(nome=exame.medico_solicitante_nome, ativo=True)
                 sessao.add(nova_pessoa_soliciante)
@@ -106,23 +106,23 @@ class PostgresDB:
                 print(f"Entidade Profissional Saude Criada! {exame.medico_solicitante_crm}")
                 identificador_profissional_saude_solicitante = novo_profissional_saude_solicitante.identificador
 
-
                 login_solicitante = f"{str(exame.medico_solicitante_conselho_uf).lower()}{exame.medico_solicitante_crm}"
                 senha_solicitante = f"{exame.medico_solicitante_crm}"
                 senha_hasheada = hashlib.md5(senha_solicitante.encode('utf')).hexdigest()
-                novo_usuario_solicitante = UsuarioModel(login=login_solicitante, senha=senha_hasheada, administrador=False,
+                novo_usuario_solicitante = UsuarioModel(login=login_solicitante, senha=senha_hasheada,
+                                                        administrador=False,
                                                         identificador_pessoa=identificador_pessoa_solicitante_nova,
                                                         ativo=True)
                 sessao.add(novo_usuario_solicitante)
                 sessao.commit()
                 print(f"Entidade Usuario Criado!")
 
-
                 identificador_usuario_solicitante = novo_usuario_solicitante.identificador
                 hoje = datetime.now()
                 hoje_str = f"{hoje.year}-{hoje.month}-{hoje.day}"
                 novo_perfil_usuario_estabelecimento_saude_solicitante = PerfilUsuarioEstabelecimentoSaudeModel(
-                    identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_usuario=identificador_usuario_solicitante,
+                    identificador_perfil='ROLE_MEDICO_SOLICITANTE',
+                    identificador_usuario=identificador_usuario_solicitante,
                     identificador_estelecimento_saude=5, data_inicial=hoje_str, data_final=hoje_str)
                 sessao.add(novo_perfil_usuario_estabelecimento_saude_solicitante)
                 sessao.commit()
@@ -130,6 +130,8 @@ class PostgresDB:
             except Exception as e:
                 print(e)
                 sessao.rollback()
+        else:
+            identificador_profissional_saude_solicitante = profissional_saude_solicitante.identificador
 
         novo_estudo = EstudoDicomModel(accessionnumber=exame.accessionnumber, patientname=exame.patientname,
                                        patientid=exame.patientid, patientsex=exame.patientsex,
