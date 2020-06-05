@@ -13,6 +13,6 @@ class ProfissionalSaudeQueries():
     def lista_profissional_por_registro(self, sessao, registro_conselho_trabalho, identificador_estado_conselho):
         profissional = sessao.query(ProfissionalSaudeModel).filter(
             ProfissionalSaudeModel.registro_conselho_trabalho == registro_conselho_trabalho).filter(
-            ProfissionalSaudeModel.identificador_estado_conselho_trabalho == identificador_estado_conselho).first()
-
+            ProfissionalSaudeModel.identificador_estado_conselho_trabalho == identificador_estado_conselho).filter(
+            ProfissionalSaudeModel.ativo == True).first()
         return profissional

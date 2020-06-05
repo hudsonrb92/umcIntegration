@@ -27,7 +27,7 @@ class PessoaModel(Base):
 
     identificador = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
-    data_nascimento = Column(DateTime, nullable=False)
+    data_nascimento = Column(DateTime, nullable=True)
     identificador_sexo = Column(Integer, nullable=True)
     identificador_raca = Column(Integer, nullable=True)
     ativa = Column(Boolean, nullable=False)
@@ -244,7 +244,7 @@ class ProfissionalSaudeModel(Base):
     identificador_pessoa = Column(Integer, ForeignKey(
         'public.pessoa.identificador'), nullable=False)
     pessoa = relationship("PessoaModel", backref=backref(
-        "public.profissional_saude", lazy="dynamic"))
+        "profissional_saude", lazy="dynamic"))
     identificador_tipo_conselho_trabalho = Column(Integer, nullable=False)
     identificador_estado_conselho_trabalho = Column(
         Integer, ForeignKey('public.estado.identificador'), nullable=False)

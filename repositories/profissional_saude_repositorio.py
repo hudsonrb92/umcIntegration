@@ -7,7 +7,10 @@ from queries.profissional_saude_queries import ProfissionalSaudeQueries
 
 class ProfissionalSaudeRepositorio():
     def inserir_profissional_saude(self, sessao, profissional_saude):
-        assinatura_decodada = b64decode(profissional_saude.assinatura_digitalizada)
+        if profissional_saude.assinatura_digitalizada:
+            assinatura_decodada = b64decode(profissional_saude.assinatura_digitalizada)
+        else:
+            assinatura_decodada = profissional_saude.assinatura_digitalizada
         novo_profissional_saude = ProfissionalSaudeModel(identificador_pessoa=profissional_saude.identificador_pessoa,
                                                          identificador_tipo_conselho_trabalho=1,
                                                          identificador_estado_conselho_trabalho=profissional_saude.identificador_estado_conselho_trabalho,
