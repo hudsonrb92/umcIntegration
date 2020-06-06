@@ -75,7 +75,7 @@ for exame in exames_worklist:
             pessoa_entidade.data_nascimento = None
             pessoa_entidade.identificador_raca = None
             PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
-            identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome().identificador
+            identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao, nome=medico_solicitante_nome).identificador
             print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
             # Cadastra Profissional De Saude

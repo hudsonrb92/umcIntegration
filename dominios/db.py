@@ -183,7 +183,7 @@ class EstudoDicomModel(Base):
 
     modalitiesinstudy = Column(String, nullable=True)
 
-    data_hora_inclusao = Column(DateTime, nullable=False, default=now)
+    data_hora_inclusao = Column(DateTime, nullable=False, default=now())
 
     data_hora_ultima_alteracao = Column(DateTime, nullable=True)
 
