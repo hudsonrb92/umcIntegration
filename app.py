@@ -132,6 +132,7 @@ for exame in exames_worklist:
                                             identificador_prioridade_estudo_dicom='R', numero_exames_ris=1,
                                             situacao='V',
                                             imagens_disponiveis=False, origem_registro='W')
+        estudo_dicom_entidade.modalitiesinstudy = procedimento_modalidade
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
         WorkListMV().update_to_created(accessionnumber)
