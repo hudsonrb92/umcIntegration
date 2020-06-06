@@ -141,7 +141,7 @@ class EstudoDicomModel(Base):
 
     identificador_prioridade_estudo_dicom = Column(Integer(),
                                                    ForeignKey(
-                                                       'prioridade_estudo_dicom.identificador'),
+                                                       'radius_taas.prioridade_estudo_dicom.identificador'),
                                                    nullable=False)
     prioridade_estudo_dicom = relationship("PrioridadeEstudoDicomModel", back_populates="estudo_dicom")
 
