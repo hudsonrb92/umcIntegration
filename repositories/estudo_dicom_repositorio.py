@@ -22,7 +22,9 @@ class EstudoDicomRepositorio():
                                        origem_registro=estudo_dicom.origem_registro,
                                        modalitiesinstudy=estudo_dicom.modalitiesinstudy,
                                        identificador_estabelecimento_saude=estudo_dicom.identificador_estabelecimento_saude,
-                                       studytime=estudo_dicom.studytime)
+                                       studytime=estudo_dicom.studytime, accessionnumber=estudo_dicom.accessionnumber,
+                                       studydescription=estudo_dicom.studydescription)
+
         EstudoDicomQuery().addEstudo(sessao, novo_estudo)
 
     def set_medico_solicitante(self, sessao, identificador_medico_solicitante, accessionnumber):
