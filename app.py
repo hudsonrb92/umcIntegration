@@ -22,10 +22,12 @@ for exame in exames_worklist:
 
     # Criação da variável de número de acesso para verificação da necessiadade ou não de criação no banco de dados
     accessionnumber = exame['accessionnumber']
+    studyinstanceuid = exame['studyinstanceuid']
     # Checar se existe exame no radius_taas
     estudo = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).first()
+    studyinstanceuid = sessao.query(EstudoDicomModel).filter_by(studyinstanceuid=studyinstanceuid).first()
     # Caso exame exista entao marcar no banco mongo como criado para que consulta nao o pegue novamente
-    if estudo:
+    if estudo or studyinstanceuid:
         print(f" Estudo encontrado ->> {exame['paciente_nome']} <<-")
         print(f" Accesion Number ->> {accessionnumber} <<-")
         WorkListMV().update_to_created(accessionnumber)
@@ -50,7 +52,6 @@ for exame in exames_worklist:
     procedimento_modalidade = exame['procedimento_modalidade']
     procedimento_nome = exame['procedimento_nome']
     accessionnumber = exame['accessionnumber']
-    studyinstanceuid = exame['studyinstanceuid']
     createdAt = exame['createdAt']
 
     print(f" Iniciao de criação de exame no banco.")
