@@ -133,10 +133,11 @@ class EstudoDicomModel(Base):
         AnotacaoEstudoDicomModel, back_populates="estudo_dicom")
     anexo_estudo_dicom = relationship(
         AnexoEstudoDicomModel, back_populates="estudo_dicom")
-    convenio = relationship("ConvenioModel", back_populates="estudo_dicom")
 
     identificador_convenio = Column(Integer(), ForeignKey(
-        'convenio.identificador'), nullable=True)
+        'radius_taas.convenio.identificador'), nullable=True)
+
+    convenio = relationship("ConvenioModel", back_populates="estudo_dicom")
 
     identificador_prioridade_estudo_dicom = Column(Integer(),
                                                    ForeignKey(
@@ -465,6 +466,7 @@ class ConvenioModel(Base):
     numero_registro_ans = Column(Integer, nullable=False)
     identificador_estabelecimento_saude = Column(Integer, ForeignKey('public.estabelecimento_saude.identificador'), nullable=False)
     identificador_usuario = Column(Integer, nullable=True)
+    estudo_dicom = relationship("EstudoDicomModel", back_populates="convenio", uselist=False)
 
 
 class EmissaoLaudoEstudoDicomModel(Base):
