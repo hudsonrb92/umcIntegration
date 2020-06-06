@@ -1,2 +1,0 @@
-class EstudoDicom():
-    pass

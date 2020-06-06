@@ -1,5 +1,6 @@
-from queries.estudo_dicom_queries import EstudoDicomQuery
 from dominios.db import EstudoDicomModel
+from queries.estudo_dicom_queries import EstudoDicomQuery
+
 
 class EstudoDicomRepositorio():
 
@@ -12,10 +13,16 @@ class EstudoDicomRepositorio():
         query = EstudoDicomQuery().buscaEstudoPorStudy(sessao=sessao, studyinstanceuid=studyinstanceuid)
         return query
 
-    def add_estudo(self,sessao, estudo_dicom):
+    def add_estudo(self, sessao, estudo_dicom):
         novo_estudo = EstudoDicomModel(studyinstanceuid=estudo_dicom.studyinstanceuid, studydate=estudo_dicom.studydate,
                                        patientname=estudo_dicom.patientname, situacao_laudo=estudo_dicom.situacao_laudo,
                                        identificador_prioridade_estudo_dicom=estudo_dicom.identificador_prioridade_estudo_dicom,
                                        numero_exames_ris=estudo_dicom.numero_exames_ris, situacao=estudo_dicom.situacao,
-                                       imagens_disponiveis=estudo_dicom.imagens_disponiveis,origem_registro=estudo_dicom.origem_registro)
+                                       imagens_disponiveis=estudo_dicom.imagens_disponiveis,
+                                       origem_registro=estudo_dicom.origem_registro)
         EstudoDicomQuery().addEstudo(sessao, novo_estudo)
+
+    def set_medico_solicitante(self, sessao, identificador_medico_solicitante, accessionnumber):
+        EstudoDicomQuery().set_medico_solicitante(sessao=sessao,
+                                                  identificador_medico_solicitante=identificador_medico_solicitante,
+                                                  accessionnumber=accessionnumber)

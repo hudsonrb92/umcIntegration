@@ -16,3 +16,8 @@ class EstudoDicomQuery():
 
     def addEstudo(self,sessao, estudo):
         sessao.add(estudo)
+
+    def set_medico_solicitante(self,sessao, identificador_medico_solicitante, accessionnumber):
+        estudo = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).first()
+        if estudo:
+            estudo.identificador_profissional_saude_solicitante = identificador_medico_solicitante

@@ -26,6 +26,8 @@ for exame in exames_worklist:
     estudo = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).first()
     # Caso exame exista entao marcar no banco mongo como criado para que consulta nao o pegue novamente
     if estudo:
+        print(f" Estudo encontrado ->> {exame['paciente_nome']} <<-")
+        print(f" Accesion Number ->> {accessionnumber} <<-")
         WorkListMV().update_to_created(accessionnumber)
         continue
 
@@ -58,8 +60,15 @@ for exame in exames_worklist:
     # Para isso vamos fazer a entidade pessoa primeiro
 
     if medico_solicitante_crm:
+        print(f" Procurando médico ->> {medico_solicitante_nome} <<- ")
         profissional_saude_solicitante_alchemy = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
             sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm, sigla=medico_solicitante_conselho_uf)
+
+    # Fazer consulta no banco caso médico
+    if profissional_saude_solicitante_alchemy:
+        identificador_medico_solicitante = profissional_saude_solicitante_alchemy.identificador
+        print(f' Profissional de saude encontrado ->> {identificador_medico_solicitante} <<-')
+
     else:
         # Cadastrar Nova Usuario Solicitante
         try:
@@ -69,8 +78,8 @@ for exame in exames_worklist:
             pessoa_entidade.data_nascimento = None
             pessoa_entidade.identificador_raca = None
             PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
-            sessao.commit()
             identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome().identificador
+            print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
             # Cadastra Profissional De Saude
             identificador_estado_conselho_trabalho_novo = EstadoRepositorio().pega_estado_por_sigla(sessao=sessao,
@@ -84,7 +93,10 @@ for exame in exames_worklist:
             profissional_saude_entidade.assinatura_digitalizada = None
             ProfissionalSaudeRepositorio().inserir_profissional_saude(sessao=sessao,
                                                                       profissional_saude=profissional_saude_entidade)
-
+            identificador_medico_solicitante = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
+                sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm,
+                sigla=medico_solicitante_conselho_uf)
+            print(f" Profissional Saude Cadatrado.")
             login_solicitante = f'{medico_solicitante_conselho_uf.lower()}{medico_solicitante_crm}'
             senha_solicitante = f'{medico_solicitante_crm}'
             # Cadastra Usuario
@@ -92,6 +104,7 @@ for exame in exames_worklist:
                                        administrador=False)
             usuario_entidade.identificador_pessoa = identificador_nova_pessoa
             UsuarioRepositorio().inserir_usuario(usuario=usuario_entidade, sessao=sessao)
+            print(f" Usuario Cadastrado.")
 
             # Criar Perfil Usuario Estabelecimento De Saude
             hoje = datetime.now()
@@ -105,6 +118,7 @@ for exame in exames_worklist:
 
             ProfissionalSaudeRepositorio().inserir_profissional_saude(sessao=sessao,
                                                                       profissional_saude=perfil_usuario_estabelecimento_saude_entidade)
+            print(f' Perfil usuário estabelecimento saude cadastrado.')
             sessao.commit()
 
         except Exception as e:
@@ -112,13 +126,24 @@ for exame in exames_worklist:
             sessao.rollback()
 
     try:
+        print(" Criando entidade de estudo dicom.")
         estudo_dicom_entidade = EstudoDicom(studyinstanceuid=studyinstanceuid, studydate=studydate,
                                             patientname=paciente_nome, situacao_laudo='N',
                                             identificador_prioridade_estudo_dicom='R', numero_exames_ris=1,
                                             situacao='V',
                                             imagens_disponiveis=False, origem_registro='W')
+        print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
         sessao.commit()
+
+        if identificador_medico_solicitante:
+            print(" Atribuição de médico solicitante ao exame recem criado.")
+            EstudoDicomRepositorio().set_medico_solicitante(sessao=sessao, accessionnumber=accessionnumber,
+                                                            identificador_medico_solicitante=identificador_medico_solicitante)
+            sessao.commit()
+            print(' Atribuição feita.')
+
+
     except Exception as e:
         print(e)
         sessao.rollback()

@@ -1,11 +1,13 @@
 from dominios.db import UsuarioModel
 from queries.usuario_query import UsuarioQuery
+import hashlib
 
 
 class UsuarioRepositorio():
     def inserir_usuario(self, usuario, sessao):
         novo_usuario = UsuarioModel(login=usuario.login, senha=usuario.senha, administrador=usuario.administrador,
                                     identificador_pessoa=usuario.identificador_pessoa, ativo=usuario.ativo)
+        novo_usuario.senha = hashlib.md5(usuario.senha.encode('utf-8')).hexdigest()
         UsuarioQuery().insere_usuario(sessao=sessao, usuario=novo_usuario)
 
     def busca_user_por_id_pessoa(self, sessao, identificador_pessoa):
