@@ -38,6 +38,7 @@ for exame in exames_worklist:
     paciente_id = exame['paciente_id']
     paciente_nome = exame['paciente_nome']
     paciente_data_nascimento = exame['paciente_data_nascimento']
+    patientbirthdate = f'{paciente_data_nascimento.split("/")[2]}{paciente_data_nascimento.split("/")[1]}{paciente_data_nascimento.split("/")[0]}'
     paciente_sexo = exame['paciente_sexo']
     atendimento_id = exame['atendimento_id']
     atendimento_datahora = exame['atendimento_datahora']
@@ -139,6 +140,8 @@ for exame in exames_worklist:
         estudo_dicom_entidade.studytime = studytime
         estudo_dicom_entidade.accessionnumber = accessionnumber
         estudo_dicom_entidade.studydescription = procedimento_nome
+        estudo_dicom_entidade.patientid = paciente_id
+        estudo_dicom_entidade.patientbirthdate = patientbirthdate
 
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)

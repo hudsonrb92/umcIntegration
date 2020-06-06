@@ -23,7 +23,8 @@ class EstudoDicomRepositorio():
                                        modalitiesinstudy=estudo_dicom.modalitiesinstudy,
                                        identificador_estabelecimento_saude=estudo_dicom.identificador_estabelecimento_saude,
                                        studytime=estudo_dicom.studytime, accessionnumber=estudo_dicom.accessionnumber,
-                                       studydescription=estudo_dicom.studydescription)
+                                       studydescription=estudo_dicom.studydescription, patientid=estudo_dicom.patientid,
+                                       patientbirthdate=estudo_dicom.patientbirthdate)
 
         EstudoDicomQuery().addEstudo(sessao, novo_estudo)
 
