@@ -134,6 +134,7 @@ for exame in exames_worklist:
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
         sessao.commit()
+        WorkListMV().update_to_created(accessionnumber)
 
         if identificador_medico_solicitante:
             print(" Atribuição de médico solicitante ao exame recem criado.")
