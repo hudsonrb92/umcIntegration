@@ -63,7 +63,7 @@ for exame in exames_worklist:
     # Para isso vamos fazer a entidade pessoa primeiro
 
     if medico_solicitante_crm:
-        print(f" Procurando médico ->> {medico_solicitante_nome} <<- ")
+        print(f" Procurando médico ->> CRM:{medico_solicitante_crm} Nome:{medico_solicitante_nome}<<- ")
         profissional_saude_solicitante_alchemy = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
             sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm, sigla=medico_solicitante_conselho_uf)
 
@@ -72,7 +72,7 @@ for exame in exames_worklist:
         identificador_medico_solicitante = profissional_saude_solicitante_alchemy.identificador
         print(f' Profissional de saude encontrado ->> {identificador_medico_solicitante} <<-')
 
-    else:
+    elif medico_solicitante_nome != None:
         # Cadastrar Nova Usuario Solicitante
         try:
             # Cadastra Pessoa
