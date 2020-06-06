@@ -54,7 +54,6 @@ for exame in exames_worklist:
     accessionnumber = exame['accessionnumber']
     studyinstanceuid = exame['studyinstanceuid']
     createdAt = exame['createdAt']
-    created_on_radius = exame['created_on_radius']
 
     # Com a lista de exames que não possuem cadastro no radius proximo passo é checar se existe o médico solicitante
     # Para isso vamos fazer a entidade pessoa primeiro
