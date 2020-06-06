@@ -49,8 +49,6 @@ for exame in exames_worklist:
     medico_solicitante_crm = exame['medico_solicitante_crm']
     procedimento_modalidade = exame['procedimento_modalidade']
     procedimento_nome = exame['procedimento_nome']
-    convenio_nome = exame['convenio_nome']
-    convenio_codigo_ans = exame['convenio_codigo_ans']
     accessionnumber = exame['accessionnumber']
     studyinstanceuid = exame['studyinstanceuid']
     createdAt = exame['createdAt']
