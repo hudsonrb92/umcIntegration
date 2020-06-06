@@ -25,9 +25,9 @@ for exame in exames_worklist:
     studyinstanceuid = exame['studyinstanceuid']
     # Checar se existe exame no radius_taas
     estudo = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).first()
-    studyinstanceuid = sessao.query(EstudoDicomModel).filter_by(studyinstanceuid=studyinstanceuid).first()
+    studyinstanceuid_queried = sessao.query(EstudoDicomModel).filter_by(studyinstanceuid=studyinstanceuid).first()
     # Caso exame exista entao marcar no banco mongo como criado para que consulta nao o pegue novamente
-    if estudo or studyinstanceuid:
+    if estudo or studyinstanceuid_queried:
         print(f" Estudo encontrado ->> {exame['paciente_nome']} <<-")
         print(f" Accesion Number ->> {accessionnumber} <<-")
         WorkListMV().update_to_created(accessionnumber)
