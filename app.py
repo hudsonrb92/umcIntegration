@@ -53,6 +53,9 @@ for exame in exames_worklist:
     studyinstanceuid = exame['studyinstanceuid']
     createdAt = exame['createdAt']
 
+    print(f" Iniciao de criação de exame no banco.")
+    print(f" Nome Paciente: {paciente_nome}")
+    print(f" Modalidade {procedimento_modalidade}, exame {procedimento_nome}")
     # Com a lista de exames que não possuem cadastro no radius proximo passo é checar se existe o médico solicitante
     # Para isso vamos fazer a entidade pessoa primeiro
 
