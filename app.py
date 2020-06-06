@@ -10,6 +10,7 @@ from fabricas import fabrica_conexao
 from mongoDB import WorkListMV
 from repositories.estado_repositorio import EstadoRepositorio
 from repositories.estudo_dicom_repositorio import EstudoDicomRepositorio
+from repositories.perfil_usuario_estabelecimento_saude_repositorio import PerfilUsuarioEstabelecimentoSaudeRepositorio
 from repositories.pessoa_repositorio import PessoaRepositorio
 from repositories.profissional_saude_repositorio import ProfissionalSaudeRepositorio
 from repositories.usuario_repositorio import UsuarioRepositorio
@@ -81,7 +82,8 @@ for exame in exames_worklist:
             pessoa_entidade.data_nascimento = None
             pessoa_entidade.identificador_raca = None
             PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
-            identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao, nome=medico_solicitante_nome).identificador
+            identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao,
+                                                                                 nome=medico_solicitante_nome).identificador
             print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
             # Cadastra Profissional De Saude
@@ -119,8 +121,8 @@ for exame in exames_worklist:
                 identificador_pessoa=identificador_nova_pessoa, sessao=sessao).identificador
             perfil_usuario_estabelecimento_saude_entidade.data_final = data_inicial
 
-            ProfissionalSaudeRepositorio().inserir_profissional_saude(sessao=sessao,
-                                                                      profissional_saude=perfil_usuario_estabelecimento_saude_entidade)
+            PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
+                                                                       profissional_saude=perfil_usuario_estabelecimento_saude_entidade)
             print(f' Perfil usuário estabelecimento saude cadastrado.')
             sessao.commit()
 
