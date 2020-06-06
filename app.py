@@ -122,7 +122,7 @@ for exame in exames_worklist:
             perfil_usuario_estabelecimento_saude_entidade.data_final = data_inicial
 
             PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
-                                                                       profissional_saude=perfil_usuario_estabelecimento_saude_entidade)
+                                                                       perfil_usuario_estabelecumento_saude=perfil_usuario_estabelecimento_saude_entidade)
             print(f' Perfil usuário estabelecimento saude cadastrado.')
             sessao.commit()
 
@@ -144,6 +144,7 @@ for exame in exames_worklist:
         estudo_dicom_entidade.studydescription = procedimento_nome
         estudo_dicom_entidade.patientid = paciente_id
         estudo_dicom_entidade.patientbirthdate = patientbirthdate
+        estudo_dicom_entidade.studyid = item_exame_id
 
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
