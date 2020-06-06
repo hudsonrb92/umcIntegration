@@ -143,6 +143,7 @@ class EstudoDicomModel(Base):
                                                    ForeignKey(
                                                        'prioridade_estudo_dicom.identificador'),
                                                    nullable=False)
+    prioridade_estudo_dicom = relationship("PrioridadeEstudoDicomModel", back_populates="estudo_dicom")
 
     identificador_profissional_saude_direcionado = Column(Integer(),
                                                           ForeignKey(
@@ -501,11 +502,12 @@ class ParametrosLaudoModel(Base):
 
 class PrioridadeEstudoDicomModel(Base):
     __table_args__ = {'schema': 'radius_taas'}
-    __tablename__ = "prioridade_estudo_dicom_model"
+    __tablename__ = "prioridade_estudo_dicom"
 
     identificador = Column(String, primary_key=True)
     descricao = Column(String, nullable=False)
     ordenacao = Column(Integer, nullable=False)
+    estudo_dicom = relationship("EstudoDicomModel", back_populates="prioridade_estudo_dicom", uselist=False)
 
 
 class RelatorioProdutividadeModel(Base):
