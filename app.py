@@ -131,7 +131,6 @@ for exame in exames_worklist:
                                             imagens_disponiveis=False, origem_registro='W')
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
-        sessao.commit()
         WorkListMV().update_to_created(accessionnumber)
 
         if identificador_medico_solicitante:
@@ -141,7 +140,7 @@ for exame in exames_worklist:
             sessao.commit()
             print(' Atribuição feita.')
 
-
+        sessao.commit()
     except Exception as e:
         print(e)
         sessao.rollback()
