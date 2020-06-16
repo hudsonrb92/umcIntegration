@@ -49,9 +49,16 @@ for exame in exames_worklist:
     pedido_id = exame['pedido_id']
     pedido_datahora = exame['pedido_datahora']
     item_exame_id = exame['item_exame_id']
+
+    # Como médico solicitante nome pode vir nulo as vezes é bom fazer uma consulta no banco da worklist para ver se ja tem o nome criado
     medico_solicitante_nome = exame['medico_solicitante_nome']
     medico_solicitante_conselho_uf = exame['medico_solicitante_conselho_uf']
     medico_solicitante_crm = exame['medico_solicitante_crm']
+
+    # Caso exista crm e nome esteja nulo ou em branco fazer consulta no banco para ver se encontra algo a respeito
+    if medico_solicitante_nome == None or medico_solicitante_nome == '' and medico_solicitante_crm != None and medico_solicitante_crm != '':
+        medico_solicitante_nome = WorkListMV().get_doctor_name_by_crm(medico_solicitante_crm)
+
     procedimento_modalidade = exame['procedimento_modalidade']
     procedimento_nome = exame['procedimento_nome']
     accessionnumber = exame['accessionnumber']
@@ -63,8 +70,10 @@ for exame in exames_worklist:
     # Com a lista de exames que não possuem cadastro no radius proximo passo é checar se existe o médico solicitante
     # Para isso vamos fazer a entidade pessoa primeiro
 
+    # Caso médico solicitante tenha algum valor no campo passado do worklist é preciso fazer a consulta
     if medico_solicitante_crm:
         print(f" Procurando médico ->> CRM:{medico_solicitante_crm} Nome:{medico_solicitante_nome}<<- ")
+        # Consulta é feita pelo número de CRM e Sigla do estado do CRM
         profissional_saude_solicitante_alchemy = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
             sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm, sigla=medico_solicitante_conselho_uf)
 
@@ -73,18 +82,27 @@ for exame in exames_worklist:
         identificador_medico_solicitante = profissional_saude_solicitante_alchemy.identificador
         print(f' Profissional de saude encontrado ->> {identificador_medico_solicitante} <<-')
 
-    elif medico_solicitante_nome != None:
+    elif medico_solicitante_nome != None or medico_solicitante_nome != '':
+        print(
+            f' Médico não encontrado ->> {medico_solicitante_nome} <<- ->> {medico_solicitante_crm} <<- ->> {medico_solicitante_conselho_uf} <<-')
         # Cadastrar Nova Usuario Solicitante
         try:
             # Cadastra Pessoa
+            #antes checar se ja existe pessoa com mesmo nome
             pessoa_entidade = Pessoa(nome=medico_solicitante_nome, ativa=True)
             pessoa_entidade.identificador_sexo = None
             pessoa_entidade.data_nascimento = None
             pessoa_entidade.identificador_raca = None
-            PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
-            identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao,
-                                                                                 nome=WorkListMV().get_doctor_name_by_crm(medico_solicitante_crm)).identificador
-            print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
+            pessoa_buscada = PessoaRepositorio().pega_pessoa_por_nome(pessoa_entidade.nome, sessao)
+            if pessoa_buscada:
+                identificador_nova_pessoa = pessoa_buscada['identificador']
+                print(f" Pessoa Encontrada, sem necessidade de novo cadastro. {identificador_nova_pessoa}.")
+            else:
+                PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
+                identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao,
+                                                                                     nome=WorkListMV().get_doctor_name_by_crm(
+                                                                                         medico_solicitante_crm)).identificador
+                print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
             # Cadastra Profissional De Saude
             identificador_estado_conselho_trabalho_novo = EstadoRepositorio().pega_estado_por_sigla(sessao=sessao,
@@ -115,7 +133,7 @@ for exame in exames_worklist:
             hoje = datetime.now()
             data_inicial = f'{hoje.year}-{hoje.month}-{hoje.day}'
             perfil_usuario_estabelecimento_saude_entidade = PerfilUsuarioEstabelecimentoSaude(
-                identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=5,
+                identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=1,
                 data_inicial=data_inicial)
             perfil_usuario_estabelecimento_saude_entidade.identificador_usuario = UsuarioRepositorio().busca_user_por_id_pessoa(
                 identificador_pessoa=identificador_nova_pessoa, sessao=sessao).identificador

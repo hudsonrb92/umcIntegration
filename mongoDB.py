@@ -1,4 +1,5 @@
 from mongoengine import *
+
 # Realizar conexao com banco de dados Mongo
 connect('worklist-umc')
 
@@ -21,6 +22,7 @@ class WorkListMV():
 
     @staticmethod
     def get_doctor_name_by_crm(crm):
-       medico = Worklist.objects(Q(medico_solicitante_nome__exists=True) & Q(medico_solicitante_crm=f'{crm}'))
-       if medico:
-           return medico[0].medico_solicitante_nome
+        medico = Worklist.objects(Q(medico_solicitante_nome__exists=True) & Q(medico_solicitante_nome__ne='') & Q(
+            medico_solicitante_crm=f'{crm}'))
+        if medico:
+            return medico[len(medico) - 1].medico_solicitante_nome
