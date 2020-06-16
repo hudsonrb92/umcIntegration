@@ -83,7 +83,7 @@ for exame in exames_worklist:
             pessoa_entidade.identificador_raca = None
             PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
             identificador_nova_pessoa = PessoaRepositorio().pega_pessoa_por_nome(sessao=sessao,
-                                                                                 nome=medico_solicitante_nome).identificador
+                                                                                 nome=WorkListMV().get_doctor_name_by_crm(medico_solicitante_crm)).identificador
             print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
             # Cadastra Profissional De Saude
