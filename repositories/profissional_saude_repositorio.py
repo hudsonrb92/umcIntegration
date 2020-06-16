@@ -19,7 +19,7 @@ class ProfissionalSaudeRepositorio():
                                                          assinatura_digitalizada=assinatura_decodada)
         ProfissionalSaudeQueries().inserir_profissional_saude(profissional_saude=novo_profissional_saude, sessao=sessao)
 
-    def listar_profissional_saude(self, sessao, identificador_pessoa):
+    def listar_profissional_saude_por_id_pessoa(self, sessao:'Sessao from sql alchemy', identificador_pessoa: 'Identificador Pessoa'):
         profissional = ProfissionalSaudeQueries().lista_por_identificador_pessoa(sessao=sessao,
                                                                                  identificador_pessoa=identificador_pessoa)
         return profissional
