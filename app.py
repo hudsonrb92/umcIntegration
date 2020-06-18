@@ -88,97 +88,97 @@ for exame in exames_worklist:
             identificador_medico_solicitante = profissional_saude_solicitante_alchemy.identificador
             print(f' Profissional de saude encontrado ->> {identificador_medico_solicitante} <<-')
 
-    elif medico_solicitante_nome is not None or medico_solicitante_nome != '':
-        print(
-            f' Médico não encontrado ->> {medico_solicitante_nome} <<-\
-             ->> {medico_solicitante_crm} <<- \
-             ->> {medico_solicitante_conselho_uf} <<-')
-        # Cadastrar Nova Usuario Solicitante
-        try:
-            # Cadastra Pessoa
-            # antes checar se ja existe pessoa com mesmo nome
-            pessoa_entidade = Pessoa(nome=medico_solicitante_nome, ativa=True)
-            pessoa_entidade.identificador_sexo = None
-            pessoa_entidade.data_nascimento = None
-            pessoa_entidade.identificador_raca = None
-            pessoa_buscada = PessoaRepositorio().pega_pessoa_por_nome(pessoa_entidade.nome, sessao)
-            if pessoa_buscada:
-                identificador_nova_pessoa = pessoa_buscada['identificador']
-                print(f" Pessoa Encontrada, sem necessidade de novo cadastro. {identificador_nova_pessoa}.")
-            else:
-                PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
-                identificador_nova_pessoa = PessoaRepositorio() \
-                    .pega_pessoa_por_nome(sessao=sessao, nome=WorkListMV() \
-                                          .get_doctor_name_by_crm(medico_solicitante_crm)).identificador
-                print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
+        if medico_solicitante_nome is not None or medico_solicitante_nome != '':
+            print(
+                f' Médico não encontrado ->> {medico_solicitante_nome} <<-\
+                 ->> {medico_solicitante_crm} <<- \
+                 ->> {medico_solicitante_conselho_uf} <<-')
+            # Cadastrar Nova Usuario Solicitante
+            try:
+                # Cadastra Pessoa
+                # antes checar se ja existe pessoa com mesmo nome
+                pessoa_entidade = Pessoa(nome=medico_solicitante_nome, ativa=True)
+                pessoa_entidade.identificador_sexo = None
+                pessoa_entidade.data_nascimento = None
+                pessoa_entidade.identificador_raca = None
+                pessoa_buscada = PessoaRepositorio().pega_pessoa_por_nome(pessoa_entidade.nome, sessao)
+                if pessoa_buscada:
+                    identificador_nova_pessoa = pessoa_buscada['identificador']
+                    print(f" Pessoa Encontrada, sem necessidade de novo cadastro. {identificador_nova_pessoa}.")
+                else:
+                    PessoaRepositorio().cadastra_pessoa(pessoa=pessoa_entidade, sessao=sessao)
+                    identificador_nova_pessoa = PessoaRepositorio() \
+                        .pega_pessoa_por_nome(sessao=sessao, nome=WorkListMV() \
+                                              .get_doctor_name_by_crm(medico_solicitante_crm)).identificador
+                    print(f" Pessoa Cadastrada {identificador_nova_pessoa}.")
 
-            # Cadastra Profissional De Saude
+                # Cadastra Profissional De Saude
 
-            # Verificar se existe profissional de saude relacionado ao identificador da pessoa
-            profissional_buscado = ProfissionalSaudeRepositorio() \
-                .listar_profissional_saude_por_id_pessoa(sessao=sessao, identificador_pessoa=identificador_nova_pessoa)
+                # Verificar se existe profissional de saude relacionado ao identificador da pessoa
+                profissional_buscado = ProfissionalSaudeRepositorio() \
+                    .listar_profissional_saude_por_id_pessoa(sessao=sessao, identificador_pessoa=identificador_nova_pessoa)
 
-            if profissional_buscado:
-                identificador_medico_solicitante = profissional_buscado.identificador
-                print("Profissional de saude encontrado relacionado ao identificador pessoa.")
-                print("Verificando se informações conferem.")
+                if profissional_buscado:
+                    identificador_medico_solicitante = profissional_buscado.identificador
+                    print("Profissional de saude encontrado relacionado ao identificador pessoa.")
+                    print("Verificando se informações conferem.")
 
-            else:
-                identificador_estado_conselho_trabalho_novo = EstadoRepositorio() \
-                    .pega_estado_por_sigla(sessao=sessao, sigla=medico_solicitante_conselho_uf).identificador
+                else:
+                    identificador_estado_conselho_trabalho_novo = EstadoRepositorio() \
+                        .pega_estado_por_sigla(sessao=sessao, sigla=medico_solicitante_conselho_uf).identificador
 
-                profissional_saude_entidade = ProfissionalSaude(identificador_pessoa=identificador_nova_pessoa,
-                                                                identificador_tipo_conselho_trabalho=1,
-                                                                identificador_estado_conselho_trabalho= \
-                                                                    identificador_estado_conselho_trabalho_novo,
-                                                                registro_conselho_trabalho=medico_solicitante_crm,
-                                                                ativo=True)
-                profissional_saude_entidade.assinatura_digitalizada = None
-                ProfissionalSaudeRepositorio().inserir_profissional_saude(sessao=sessao,
-                                                                          profissional_saude=profissional_saude_entidade)
-                identificador_medico_solicitante = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
-                    sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm,
-                    sigla=medico_solicitante_conselho_uf)
-                print(f" Profissional Saude Cadatrado.")
+                    profissional_saude_entidade = ProfissionalSaude(identificador_pessoa=identificador_nova_pessoa,
+                                                                    identificador_tipo_conselho_trabalho=1,
+                                                                    identificador_estado_conselho_trabalho= \
+                                                                        identificador_estado_conselho_trabalho_novo,
+                                                                    registro_conselho_trabalho=medico_solicitante_crm,
+                                                                    ativo=True)
+                    profissional_saude_entidade.assinatura_digitalizada = None
+                    ProfissionalSaudeRepositorio().inserir_profissional_saude(sessao=sessao,
+                                                                              profissional_saude=profissional_saude_entidade)
+                    identificador_medico_solicitante = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
+                        sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm,
+                        sigla=medico_solicitante_conselho_uf)
+                    print(f" Profissional Saude Cadatrado.")
 
-            login_solicitante = f'{medico_solicitante_conselho_uf.lower()}{medico_solicitante_crm}'
-            senha_solicitante = f'{medico_solicitante_crm}'
+                login_solicitante = f'{medico_solicitante_conselho_uf.lower()}{medico_solicitante_crm}'
+                senha_solicitante = f'{medico_solicitante_crm}'
 
-            # Cadastra Usuario
-            # Verificar se existe usuário relacionado ao identificador pessoa
-            usuario_buscado = UsuarioRepositorio()\
-                .busca_user_por_id_pessoa(sessao=sessao,identificador_pessoa=identificador_nova_pessoa)
-            if usuario_buscado:
-                print(f"Usuário Existente. ID = {usuario_buscado.identificador}")
-            else:
-                usuario_entidade = Usuario(login=login_solicitante, senha=senha_solicitante, ativo=True,
-                                           administrador=False)
-                usuario_entidade.identificador_pessoa = identificador_nova_pessoa
-                UsuarioRepositorio().inserir_usuario(usuario=usuario_entidade, sessao=sessao)
-                print(f" Usuario Cadastrado.")
+                # Cadastra Usuario
+                # Verificar se existe usuário relacionado ao identificador pessoa
+                usuario_buscado = UsuarioRepositorio()\
+                    .busca_user_por_id_pessoa(sessao=sessao,identificador_pessoa=identificador_nova_pessoa)
+                if usuario_buscado:
+                    print(f"Usuário Existente. ID = {usuario_buscado.identificador}")
+                else:
+                    usuario_entidade = Usuario(login=login_solicitante, senha=senha_solicitante, ativo=True,
+                                               administrador=False)
+                    usuario_entidade.identificador_pessoa = identificador_nova_pessoa
+                    UsuarioRepositorio().inserir_usuario(usuario=usuario_entidade, sessao=sessao)
+                    print(f" Usuario Cadastrado.")
 
-            # Criar Perfil Usuario Estabelecimento De Saude
-            hoje = datetime.now()
-            data_inicial = f'{hoje.year}-{hoje.month}-{hoje.day}'
-            perfil_usuario_estabelecimento_saude_entidade = PerfilUsuarioEstabelecimentoSaude(
-                identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=1,
-                data_inicial=data_inicial)
-            perfil_usuario_estabelecimento_saude_entidade.identificador_usuario = UsuarioRepositorio()\
-                .busca_user_por_id_pessoa(identificador_pessoa=identificador_nova_pessoa, sessao=sessao).identificador
-            perfil_usuario_estabelecimento_saude_entidade.data_final = data_inicial
+                # Criar Perfil Usuario Estabelecimento De Saude
+                hoje = datetime.now()
+                data_inicial = f'{hoje.year}-{hoje.month}-{hoje.day}'
+                perfil_usuario_estabelecimento_saude_entidade = PerfilUsuarioEstabelecimentoSaude(
+                    identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=1,
+                    data_inicial=data_inicial)
+                perfil_usuario_estabelecimento_saude_entidade.identificador_usuario = UsuarioRepositorio()\
+                    .busca_user_por_id_pessoa(identificador_pessoa=identificador_nova_pessoa, sessao=sessao).identificador
+                perfil_usuario_estabelecimento_saude_entidade.data_final = data_inicial
 
-            #Verificar se existe PUES relacionado ao usuário existente
-            pues_buscado = PerfilUsuarioEstabelecimentoSaudeRepositorio()\
-                .busca_pues_por_id_usuario(sessao=sessao,
-                                           identificador_usuario=perfil_usuario_estabelecimento_saude_entidade.identificador_usuario)
-            PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
-                                                                       perfil_usuario_estabelecumento_saude=perfil_usuario_estabelecimento_saude_entidade)
-            print(f' Perfil usuário estabelecimento saude cadastrado.')
-            sessao.commit()
+                #Verificar se existe PUES relacionado ao usuário existente
+                pues_buscado = PerfilUsuarioEstabelecimentoSaudeRepositorio()\
+                    .busca_pues_por_id_usuario(sessao=sessao,
+                                               identificador_usuario=perfil_usuario_estabelecimento_saude_entidade.identificador_usuario)
+                PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
+                                                                           perfil_usuario_estabelecumento_saude=perfil_usuario_estabelecimento_saude_entidade)
+                print(f' Perfil usuário estabelecimento saude cadastrado.')
+                sessao.commit()
 
-        except Exception as e:
-            print(e)
-            sessao.rollback()
+            except Exception as e:
+                print(e)
+                sessao.rollback()
 
     try:
         print(" Criando entidade de estudo dicom.")
@@ -198,7 +198,7 @@ for exame in exames_worklist:
 
         print(" Persistindo informação no banco de dados.")
         EstudoDicomRepositorio().add_estudo(sessao=sessao, estudo_dicom=estudo_dicom_entidade)
-        WorkListMV().update_to_created(accessionnumber)
+
 
         if identificador_medico_solicitante:
             print(" Atribuição de médico solicitante ao exame recem criado.")
@@ -208,6 +208,11 @@ for exame in exames_worklist:
             print(' Atribuição feita.')
 
         sessao.commit()
+        #Checar se exame foi realmente criado no radius taas
+
+        estudo = EstudoDicomRepositorio().listar_por_studyinstanceuid(sessao=sessao, studyinstanceuid=estudo_dicom_entidade.studyinstanceuid)
+        if len(estudo)>0:
+            WorkListMV().update_to_created(accessionnumber)
     except Exception as e:
         print(e)
         sessao.rollback()

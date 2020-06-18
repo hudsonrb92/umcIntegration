@@ -9,8 +9,13 @@ class EstudoDicomRepositorio():
         estudos = query_estudo.buscaClientes(sessao)
         return estudos
 
+    def listar_estudo_por_acc(self, sessao, accessionnumber):
+        estudo = EstudoDicomQuery().buscaEstudoPorAccession(sessao, accessionnumber)
+        return estudo
+
     def listar_por_studyinstanceuid(self, sessao, studyinstanceuid):
-        query = EstudoDicomQuery().buscaEstudoPorStudy(sessao=sessao, studyinstanceuid=studyinstanceuid)
+        query = EstudoDicomQuery().buscaEstudoPorStudy(
+            sessao=sessao, studyinstanceuid=studyinstanceuid)
         return query
 
     def add_estudo(self, sessao, estudo_dicom):
@@ -32,3 +37,19 @@ class EstudoDicomRepositorio():
         EstudoDicomQuery().set_medico_solicitante(sessao=sessao,
                                                   identificador_medico_solicitante=identificador_medico_solicitante,
                                                   accessionnumber=accessionnumber)
+
+    def remove_acc_duplicador(self, sessao):
+        estudies = EstudoDicomQuery().get_acc_duplicados()
+        for estudo in estudies:
+            estudos = self.listar_estudo_por_acc(sessao, accessionnumber=estudo.accessionnumber)
+
+            if len(estudos)==2:
+                estud1 = estudos[0]
+                estud2 = estudos[1]
+
+                if (estud1.imagens_disponiveis is True and estud2.imagens_disponiveis is False) or (
+                    estud1.imagens_disponiveis is False and estud2.imagens_disponiveis is True):
+                    if (estud1.imagens_disponiveis is False) and (estud1.situacao_laudo == 'N'):
+                        estud1.situacao = 'T'
+                    if (estud2.imagens_disponiveis is False) and (estud2.situacao_laudo == 'N'):
+                        estud2.situacao = 'T'
