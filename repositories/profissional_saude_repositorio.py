@@ -25,9 +25,9 @@ class ProfissionalSaudeRepositorio():
         return profissional
 
     def listar_profissional_saude_por_registro(self, sessao, registro_conselho_trabalho, sigla):
-        identificador_estado_conselho = EstadoQueries().pega_estado_por_sigla(sessao=sessao, sigla=sigla).identificador
+        identificador_estado_conselho = EstadoQueries().pega_estado_por_sigla(sessao=sessao, sigla=sigla.upper()).identificador
 
-        profissional = ProfissionalSaudeQueries().lista_profissional_por_registro(sessao,
-                                                                                  registro_conselho_trabalho=registro_conselho_trabalho.upper(),
+        profissional = ProfissionalSaudeQueries().lista_profissional_por_registro(sessao=sessao,
+                                                                                  registro_conselho_trabalho=registro_conselho_trabalho,
                                                                                   identificador_estado_conselho=identificador_estado_conselho)
         return profissional

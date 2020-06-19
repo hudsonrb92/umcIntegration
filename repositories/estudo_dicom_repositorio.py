@@ -33,23 +33,27 @@ class EstudoDicomRepositorio():
 
         EstudoDicomQuery().addEstudo(sessao, novo_estudo)
 
-    def set_medico_solicitante(self, sessao, identificador_medico_solicitante, accessionnumber):
+    def set_medico_solicitante(self, sessao, identificador_profissional_saude_solicitante, accessionnumber):
         EstudoDicomQuery().set_medico_solicitante(sessao=sessao,
-                                                  identificador_medico_solicitante=identificador_medico_solicitante,
+                                                  identificador_profissional_saude_solicitante=identificador_profissional_saude_solicitante,
                                                   accessionnumber=accessionnumber)
 
     def remove_acc_duplicador(self, sessao):
-        estudies = EstudoDicomQuery().get_acc_duplicados()
+        estudies = EstudoDicomQuery().get_acc_duplicados(sessao=sessao)
+        print(f'Numero de accessions duplicados = {len(estudies)}')
         for estudo in estudies:
-            estudos = self.listar_estudo_por_acc(sessao, accessionnumber=estudo.accessionnumber)
-
-            if len(estudos)==2:
-                estud1 = estudos[0]
-                estud2 = estudos[1]
+            exame = self.listar_estudo_por_acc(
+                sessao=sessao, accessionnumber=estudo.accessionnumber)
+            if len(exame) == 2:
+                estud1 = exame[0]
+                estud2 = exame[1]
 
                 if (estud1.imagens_disponiveis is True and estud2.imagens_disponiveis is False) or (
-                    estud1.imagens_disponiveis is False and estud2.imagens_disponiveis is True):
+                        estud1.imagens_disponiveis is False and estud2.imagens_disponiveis is True):
+                    print("Accession duplicado encontrado")
+                    print(f"Paciente {estud1.patientname}")
                     if (estud1.imagens_disponiveis is False) and (estud1.situacao_laudo == 'N'):
                         estud1.situacao = 'T'
                     if (estud2.imagens_disponiveis is False) and (estud2.situacao_laudo == 'N'):
                         estud2.situacao = 'T'
+                        sessao.commit()

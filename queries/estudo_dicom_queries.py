@@ -15,16 +15,18 @@ class EstudoDicomQuery():
         return estudos
 
     def buscaEstudoPorStudy(self, studyinstanceuid, sessao):
-        estudo = sessao.query(EstudoDicomModel).filter_by(studyinstanceuid=studyinstanceuid).first()
+        estudo = sessao.query(EstudoDicomModel).filter_by(
+            studyinstanceuid=studyinstanceuid).first()
         return estudo
 
     def addEstudo(self, sessao, estudo):
         sessao.add(estudo)
 
-    def set_medico_solicitante(self, sessao, identificador_medico_solicitante, accessionnumber):
-        estudo = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).first()
+    def set_medico_solicitante(self, sessao, identificador_profissional_saude_solicitante, accessionnumber):
+        estudo = sessao.query(EstudoDicomModel).filter_by(
+            accessionnumber=accessionnumber).first()
         if estudo:
-            estudo.identificador_profissional_saude_solicitante = identificador_medico_solicitante
+            estudo.identificador_profissional_saude_solicitante = identificador_profissional_saude_solicitante
 
     def get_acc_duplicados(self, sessao):
         hoje = datetime.datetime.now()
@@ -40,5 +42,6 @@ class EstudoDicomQuery():
         return exams
 
     def buscaEstudoPorAccession(self, sessao, accessionnumber):
-        exams = sessao.query(EstudoDicomModel).filter_by(accessionnumber=accessionnumber).all()
+        exams = sessao.query(EstudoDicomModel).filter_by(
+            accessionnumber=accessionnumber).all()
         return exams

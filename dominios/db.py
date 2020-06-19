@@ -75,7 +75,8 @@ class EnderecoModel(Base):
     complemento = Column(Text, nullable=True)
     bairro = Column(String, nullable=True)
     cep = Column(Integer, nullable=False)
-    identificador_cidade = Column(Integer, ForeignKey('public.cidade.identificador'))
+    identificador_cidade = Column(
+        Integer, ForeignKey('public.cidade.identificador'))
     ativo = Column(Boolean, nullable=False)
 
 
@@ -127,23 +128,22 @@ class EstudoDicomModel(Base):
                                                  nullable=False)
     estabelecimento_saude = relationship(EstabelecimentoSaudeModel,
                                          backref=backref('estudo_dicom', lazy='dynamic'))
+
     laudo_estudo_dicom = relationship(
         "LaudoEstudoDicomModel", back_populates="estudo_dicom")
     anotacao_estudo_dicom = relationship(
         AnotacaoEstudoDicomModel, back_populates="estudo_dicom")
     anexo_estudo_dicom = relationship(
         AnexoEstudoDicomModel, back_populates="estudo_dicom")
-
     identificador_convenio = Column(Integer(), ForeignKey(
         'radius_taas.convenio.identificador'), nullable=True)
-
     convenio = relationship("ConvenioModel", back_populates="estudo_dicom")
-
     identificador_prioridade_estudo_dicom = Column(Integer(),
                                                    ForeignKey(
                                                        'radius_taas.prioridade_estudo_dicom.identificador'),
                                                    nullable=False)
-    prioridade_estudo_dicom = relationship("PrioridadeEstudoDicomModel", back_populates="estudo_dicom")
+    prioridade_estudo_dicom = relationship(
+        "PrioridadeEstudoDicomModel", back_populates="estudo_dicom")
 
     identificador_profissional_saude_direcionado = Column(Integer(),
                                                           ForeignKey(
@@ -166,53 +166,29 @@ class EstudoDicomModel(Base):
                                                         nullable=True)
 
     chave_primaria_origem = Column(Integer, nullable=True)
-
     studyinstanceuid = Column(String, nullable=False)
-
     studydate = Column(DateTime, nullable=False)
-
     studytime = Column(String, nullable=True)
-
     patientid = Column(String, nullable=True)
-
     patientname = Column(String, nullable=False)
-
     accessionnumber = Column(String, nullable=True)
-
     studydescription = Column(String, nullable=True)
-
     modalitiesinstudy = Column(String, nullable=True)
-
     data_hora_inclusao = Column(DateTime, nullable=False, default=now())
-
     data_hora_ultima_alteracao = Column(DateTime, nullable=True)
-
     situacao_laudo = Column(String, nullable=False)
-
     numero_exames_ris = Column(Integer, nullable=False)
-
     studyid = Column(String, nullable=True)
-
     patientsex = Column(String, nullable=True)
-
     patientbirthdate = Column(String, nullable=True)
-
     nome_operador = Column(String, nullable=True)
-
     numberofseries = Column(Integer, nullable=True)
-
     numberofinstances = Column(Integer, nullable=True)
-
     situacao = Column(String, nullable=False)
-
     nome_mae = Column(String, nullable=True)
-
     imagens_disponiveis = Column(Boolean, nullable=False)
-
     origem_registro = Column(String, nullable=False)
-
     data_hora_validacao = Column(DateTime, nullable=True)
-
     chave_primaria_origem_worklist = Column(Integer, nullable=True)
 
 
@@ -263,9 +239,20 @@ class ProfissionalSaudeModel(Base):
                                  foreign_keys='LaudoEstudoDicomModel.identificador_profissional_saude_revisor',
                                  backref='revisor_laudo', lazy='dynamic')
 
-    anotacao_estudo_dicom = relationship(
-        "AnotacaoEstudoDicomModel", back_populates="profissional_saude")
+    estudo_profissional_saude_direcionado =\
+        relationship('EstudoDicomModel', foreign_keys='EstudoDicomModel.identificador_profissional_saude_direcionado',
+                     backref='estudo_profissional_saude_direcionado', lazy='dynamic')
+    estudo_profissional_saude_validacao = relationship('EstudoDicomModel',
+                                                       foreign_keys='EstudoDicomModel.identificador_profissional_saude_validacao',
+                                                       backref='estudo_profissional_saude_validacao', lazy='dynamic')
+    estudo_profissional_saude_solicitante = relationship('EstudoDicomModel',
+                                                         foreign_keys='EstudoDicomModel.identificador_profissional_saude_solicitante',
+                                                         backref='estudo_profissional_saude_solicitante', lazy='dynamic')
+    estudo_profissional_saude_operador = relationship('EstudoDicomModel',
+                                                      foreign_keys='EstudoDicomModel.identificador_profissional_saude_operador',
+                                                      backref='estudo_profissional_saude_operador', lazy='dynamic')
 
+    anotacao_estudo_dicom = relationship('AnotacaoEstudoDicomModel')
 
 
 class UsuarioModel(Base):
@@ -368,7 +355,8 @@ class ModeloLaudoUsuarioModel(Base):
     __table_args__ = {'schema': 'public'}
     __tablename__ = "modelo_laudo_usuario"
 
-    identificador_modelo_laudo = Column(Integer, nullable=False, primary_key=True)
+    identificador_modelo_laudo = Column(
+        Integer, nullable=False, primary_key=True)
     identificador_usuario = Column(Integer, nullable=False)
 
 
@@ -404,7 +392,8 @@ class PessoaContatoModel(Base):
     __tablename__ = "pessoa_contato"
 
     identificador = Column(Integer, primary_key=True)
-    identificador_pessoa = Column(Integer, ForeignKey('public.pessoa.identificador'), nullable=False)
+    identificador_pessoa = Column(Integer, ForeignKey(
+        'public.pessoa.identificador'), nullable=False)
     identificador_tipo_contato = Column(String, nullable=False)
     contato = Column(String, nullable=False)
     ativo = Column(Boolean, nullable=False, default=True)
@@ -465,9 +454,11 @@ class ConvenioModel(Base):
     nome_fantasia = Column(String, nullable=False)
     numero_cnpj = Column(String, nullable=True)
     numero_registro_ans = Column(Integer, nullable=False)
-    identificador_estabelecimento_saude = Column(Integer, ForeignKey('public.estabelecimento_saude.identificador'), nullable=False)
+    identificador_estabelecimento_saude = Column(Integer, ForeignKey(
+        'public.estabelecimento_saude.identificador'), nullable=False)
     identificador_usuario = Column(Integer, nullable=True)
-    estudo_dicom = relationship("EstudoDicomModel", back_populates="convenio", uselist=False)
+    estudo_dicom = relationship(
+        "EstudoDicomModel", back_populates="convenio", uselist=False)
 
 
 class EmissaoLaudoEstudoDicomModel(Base):
@@ -475,7 +466,8 @@ class EmissaoLaudoEstudoDicomModel(Base):
     __tablename__ = "emissao_laudo_estudo_dicom"
 
     identificador = Column(Integer, nullable=False, primary_key=True)
-    identificador_estudo_dicom = Column(Integer, ForeignKey('radius_taas.estudo_dicom.identificador'), nullable=False)
+    identificador_estudo_dicom = Column(Integer, ForeignKey(
+        'radius_taas.estudo_dicom.identificador'), nullable=False)
     identificador_profissional_saude = Column(Integer, ForeignKey('public.profissional_saude.identificador'),
                                               nullable=False)
     data_hora_inicio = Column(DateTime)
@@ -507,7 +499,8 @@ class PrioridadeEstudoDicomModel(Base):
     identificador = Column(String, primary_key=True)
     descricao = Column(String, nullable=False)
     ordenacao = Column(Integer, nullable=False)
-    estudo_dicom = relationship("EstudoDicomModel", back_populates="prioridade_estudo_dicom", uselist=False)
+    estudo_dicom = relationship(
+        "EstudoDicomModel", back_populates="prioridade_estudo_dicom", uselist=False)
 
 
 class RelatorioProdutividadeModel(Base):
