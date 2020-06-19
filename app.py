@@ -14,13 +14,16 @@ from repositories.perfil_usuario_estabelecimento_saude_repositorio import Perfil
 from repositories.pessoa_repositorio import PessoaRepositorio
 from repositories.profissional_saude_repositorio import ProfissionalSaudeRepositorio
 from repositories.usuario_repositorio import UsuarioRepositorio
+from repositories.estabelecimento_saude_repositorios import EstabelecimentoSaudeRepositorio
 
 exames_worklist = WorkListMV().get_exames_not_created()
 sessao = FabricaConexao().criar_sessao()
 EstudoDicomRepositorio().remove_acc_duplicador(sessao=sessao)
 
+
 def now():
     return (f'{datetime.now().day:02}/{datetime.now().month:02}/{datetime.now().year} {datetime.now().hour:02}:{datetime.now().minute:02}:{datetime.now().second:02}')
+
 
 for exame in exames_worklist:
 
@@ -130,7 +133,8 @@ for exame in exames_worklist:
 
                 if profissional_buscado:
                     identificador_profissional_saude_solicitante = profissional_buscado.identificador
-                    print(f"{now()} Profissional de saude encontrado relacionado ao identificador pessoa.")
+                    print(
+                        f"{now()} Profissional de saude encontrado relacionado ao identificador pessoa.")
                     print(f"{now()} Verificando se informações conferem.")
 
                 else:
@@ -177,7 +181,8 @@ for exame in exames_worklist:
                 hoje = datetime.now()
                 data_inicial = f'{hoje.year}-{hoje.month}-{hoje.day}'
                 perfil_usuario_estabelecimento_saude_entidade = PerfilUsuarioEstabelecimentoSaude(
-                    identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=1,
+                    identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=EstabelecimentoSaudeRepositorio()
+                    .pega_primeiro_estabelecimento().identificador,
                     data_inicial=data_inicial)
                 perfil_usuario_estabelecimento_saude_entidade.identificador_usuario = UsuarioRepositorio() \
                     .busca_user_por_id_pessoa(identificador_pessoa=identificador_nova_pessoa,
@@ -191,7 +196,8 @@ for exame in exames_worklist:
                 if pues_buscado:
                     PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
                                                                                perfil_usuario_estabelecumento_saude=perfil_usuario_estabelecimento_saude_entidade)
-                    print(f'{now()} Perfil usuário estabelecimento saude cadastrado.')
+                    print(
+                        f'{now()} Perfil usuário estabelecimento saude cadastrado.')
                 else:
                     sessao.rollback()
                 sessao.commit()
@@ -208,7 +214,8 @@ for exame in exames_worklist:
                                             situacao='V',
                                             imagens_disponiveis=False, origem_registro='W')
         estudo_dicom_entidade.modalitiesinstudy = procedimento_modalidade
-        estudo_dicom_entidade.identificador_estabelecimento_saude = 1
+        estudo_dicom_entidade.identificador_estabelecimento_saude = EstabelecimentoSaudeRepositorio()\
+            .pega_primeiro_estabelecimento().identificador
         estudo_dicom_entidade.studytime = studytime
         estudo_dicom_entidade.accessionnumber = accessionnumber
         estudo_dicom_entidade.studydescription = procedimento_nome
