@@ -88,16 +88,10 @@ for exame in exames_worklist:
         print(
             f"{now()} Procurando médico ->> CRM:{medico_solicitante_crm} Nome:{medico_solicitante_nome}<<- ")
         # Consulta é feita pelo número de CRM e Sigla do estado do CRM
-        profissional_saude_solicitante_alchemy = ProfissionalSaudeRepositorio().listar_profissional_saude_por_registro(
-            sessao=sessao, registro_conselho_trabalho=medico_solicitante_crm, sigla=medico_solicitante_conselho_uf)
+        pessoa_saude_solicitante_alchemy = PessoaRepositorio().pega_pessoa_por_nome(
+            nome=medico_solicitante_nome, sessao=sessao)
 
-        # Fazer consulta no banco caso médico
-        if profissional_saude_solicitante_alchemy:
-            identificador_profissional_saude_solicitante = profissional_saude_solicitante_alchemy.identificador
-            print(
-                f'{now()} Profissional de saude encontrado ->> {identificador_profissional_saude_solicitante} <<-')
-
-        if medico_solicitante_nome is not None or medico_solicitante_nome != '' and identificador_profissional_saude_solicitante is None:
+        if medico_solicitante_nome is not None or medico_solicitante_nome != '' and pessoa_saude_solicitante_alchemy is None:
             print(
                 f'{now()} Médico não encontrado ->> {medico_solicitante_nome} <<-\
                  ->> {medico_solicitante_crm} <<- \
