@@ -16,13 +16,14 @@ from repositories.profissional_saude_repositorio import ProfissionalSaudeReposit
 from repositories.usuario_repositorio import UsuarioRepositorio
 from repositories.estabelecimento_saude_repositorios import EstabelecimentoSaudeRepositorio
 
-exames_worklist = WorkListMV().get_exames_not_created()
-sessao = FabricaConexao().criar_sessao()
-EstudoDicomRepositorio().remove_acc_duplicador(sessao=sessao)
-
 
 def now():
     return (f'{datetime.now().day:02}/{datetime.now().month:02}/{datetime.now().year} {datetime.now().hour:02}:{datetime.now().minute:02}:{datetime.now().second:02}')
+
+
+exames_worklist = WorkListMV().get_exames_not_created()
+sessao = FabricaConexao().criar_sessao()
+EstudoDicomRepositorio().remove_acc_duplicador(sessao=sessao)
 
 
 for exame in exames_worklist:

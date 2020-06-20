@@ -1,9 +1,11 @@
 from dominios.db import EstudoDicomModel
-from app import now
 from queries.estudo_dicom_queries import EstudoDicomQuery
+from datetime import datetime
 
 
 class EstudoDicomRepositorio():
+    def now(self):
+        return (f'{datetime.now().day:02}/{datetime.now().month:02}/{datetime.now().year} {datetime.now().hour:02}:{datetime.now().minute:02}:{datetime.now().second:02}')
 
     def listar_estudo(self, sessao):
         query_estudo = EstudoDicomQuery()
@@ -41,11 +43,11 @@ class EstudoDicomRepositorio():
 
     def remove_acc_duplicador(self, sessao):
         estudies = EstudoDicomQuery().get_acc_duplicados(sessao=sessao)
-        print(f'{now()} Numero de accessions duplicados = {len(estudies)}')
+        print(f'{self.now()} Numero de accessions duplicados = {len(estudies)}')
         for estudo in estudies:
             exame = self.listar_estudo_por_acc(
                 sessao=sessao, accessionnumber=estudo.accessionnumber)
-            print(f'{now} Accesion duplicado = {estudo.accessionnumber}')
+            print(f'{self.now()} Accesion duplicado = {estudo.accessionnumber}')
             if len(exame) == 2:
                 estud1 = exame[0]
                 estud2 = exame[1]
