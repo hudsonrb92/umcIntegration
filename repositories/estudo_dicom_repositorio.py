@@ -41,7 +41,7 @@ class EstudoDicomRepositorio():
 
     def remove_acc_duplicador(self, sessao):
         estudies = EstudoDicomQuery().get_acc_duplicados(sessao=sessao)
-        print(f'Numero de accessions duplicados = {len(estudies)}')
+        print(f'{now()} Numero de accessions duplicados = {len(estudies)}')
         for estudo in estudies:
             exame = self.listar_estudo_por_acc(
                 sessao=sessao, accessionnumber=estudo.accessionnumber)
