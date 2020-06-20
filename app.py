@@ -84,14 +84,14 @@ for exame in exames_worklist:
     # Para isso vamos fazer a entidade pessoa primeiro
 
     # Caso médico solicitante tenha algum valor no campo passado do worklist é preciso fazer a consulta
-    if medico_solicitante_crm:
+    if medico_solicitante_crm is not None and medico_solicitante_crm != '':
         print(
             f"{now()} Procurando médico ->> CRM:{medico_solicitante_crm} Nome:{medico_solicitante_nome}<<- ")
         # Consulta é feita pelo número de CRM e Sigla do estado do CRM
         pessoa_saude_solicitante_alchemy = PessoaRepositorio().pega_pessoa_por_nome(
             nome=medico_solicitante_nome, sessao=sessao)
 
-        if medico_solicitante_nome is not None or medico_solicitante_nome != '' and pessoa_saude_solicitante_alchemy is None:
+        if medico_solicitante_nome is not None and medico_solicitante_nome != '' and pessoa_saude_solicitante_alchemy is None:
             print(
                 f'{now()} Médico não encontrado ->> {medico_solicitante_nome} <<-\
                  ->> {medico_solicitante_crm} <<- \
@@ -176,7 +176,7 @@ for exame in exames_worklist:
                 data_inicial = f'{hoje.year}-{hoje.month}-{hoje.day}'
                 perfil_usuario_estabelecimento_saude_entidade = PerfilUsuarioEstabelecimentoSaude(
                     identificador_perfil='ROLE_MEDICO_SOLICITANTE', identificador_estabelecimento_saude=EstabelecimentoSaudeRepositorio()
-                    .pega_primeiro_estabelecimento().identificador,
+                    .pega_primeiro_estabelecimento(sessao).identificador,
                     data_inicial=data_inicial)
                 perfil_usuario_estabelecimento_saude_entidade.identificador_usuario = UsuarioRepositorio() \
                     .busca_user_por_id_pessoa(identificador_pessoa=identificador_nova_pessoa,
@@ -187,14 +187,12 @@ for exame in exames_worklist:
                 pues_buscado = PerfilUsuarioEstabelecimentoSaudeRepositorio() \
                     .busca_pues_por_id_usuario(sessao=sessao,
                                                identificador_usuario=perfil_usuario_estabelecimento_saude_entidade.identificador_usuario)
-                if pues_buscado:
+                if pues_buscado is None:
                     PerfilUsuarioEstabelecimentoSaudeRepositorio().insere_pues(sessao=sessao,
                                                                                perfil_usuario_estabelecumento_saude=perfil_usuario_estabelecimento_saude_entidade)
                     print(
                         f'{now()} Perfil usuário estabelecimento saude cadastrado.')
-                else:
-                    sessao.rollback()
-                sessao.commit()
+                    sessao.commit()
 
             except Exception as e:
                 print(f'{now()} {e}')
@@ -209,7 +207,7 @@ for exame in exames_worklist:
                                             imagens_disponiveis=False, origem_registro='W')
         estudo_dicom_entidade.modalitiesinstudy = procedimento_modalidade
         estudo_dicom_entidade.identificador_estabelecimento_saude = EstabelecimentoSaudeRepositorio()\
-            .pega_primeiro_estabelecimento().identificador
+            .pega_primeiro_estabelecimento(sessao).identificador
         estudo_dicom_entidade.studytime = studytime
         estudo_dicom_entidade.accessionnumber = accessionnumber
         estudo_dicom_entidade.studydescription = procedimento_nome
@@ -221,13 +219,13 @@ for exame in exames_worklist:
         EstudoDicomRepositorio().add_estudo(
             sessao=sessao, estudo_dicom=estudo_dicom_entidade)
 
-        if identificador_profissional_saude_solicitante:
+        if identificador_profissional_saude_solicitante is not None and identificador_profissional_saude_solicitante != '':
             print(f"{now()} Atribuição de médico solicitante ao exame recem criado.")
             EstudoDicomRepositorio().set_medico_solicitante(sessao=sessao, accessionnumber=accessionnumber,
                                                             identificador_profissional_saude_solicitante=identificador_profissional_saude_solicitante)
             sessao.commit()
             print(f'{now()} Atribuição feita.')
-
+        print(f"{now()} fim do cadastro.")
         sessao.commit()
         # Checar se exame foi realmente criado no radius taas
 
@@ -239,3 +237,5 @@ for exame in exames_worklist:
     except Exception as e:
         print(f'{now()} {e}')
         sessao.rollback()
+
+sessao.close()

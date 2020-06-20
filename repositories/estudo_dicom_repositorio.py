@@ -1,4 +1,5 @@
 from dominios.db import EstudoDicomModel
+from app import now
 from queries.estudo_dicom_queries import EstudoDicomQuery
 
 
@@ -44,6 +45,7 @@ class EstudoDicomRepositorio():
         for estudo in estudies:
             exame = self.listar_estudo_por_acc(
                 sessao=sessao, accessionnumber=estudo.accessionnumber)
+            print(f'{now} Accesion duplicado = {estudo.accessionnumber}')
             if len(exame) == 2:
                 estud1 = exame[0]
                 estud2 = exame[1]
