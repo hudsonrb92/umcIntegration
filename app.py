@@ -67,7 +67,7 @@ for exame in exames_worklist:
     medico_solicitante_nome = exame['medico_solicitante_nome']
     medico_solicitante_conselho_uf = exame['medico_solicitante_conselho_uf']
     medico_solicitante_crm = exame['medico_solicitante_crm']
-
+    identificador_profissional_saude_solicitante = None
     # Caso exista crm e nome esteja nulo ou em branco fazer consulta no banco para ver se encontra algo a respeito
     if medico_solicitante_nome is None or medico_solicitante_nome == '' \
             and medico_solicitante_crm is not None and medico_solicitante_crm != '':
@@ -91,6 +91,18 @@ for exame in exames_worklist:
         # Consulta é feita pelo número de CRM e Sigla do estado do CRM
         pessoa_saude_solicitante_alchemy = PessoaRepositorio().pega_pessoa_por_nome(
             nome=medico_solicitante_nome, sessao=sessao)
+
+        if pessoa_saude_solicitante_alchemy:
+            try:
+                identificador_profissional_saude_solicitante = pessoa_saude_solicitante_alchemy.profissional_saude.first().identificador
+                print(
+                    f'{now()} Médico Solicitante Existe -> {identificador_profissional_saude_solicitante}')
+            except Exception as e:
+                print(f'{now()} Erro ao pegar identificador médico solicitante')
+                print(f'{now()} {e}')
+
+        else:
+            identificador_profissional_saude_solicitante = None
 
         if medico_solicitante_nome is not None and medico_solicitante_nome != '' and pessoa_saude_solicitante_alchemy is None:
             print(
@@ -226,7 +238,7 @@ for exame in exames_worklist:
                                                             identificador_profissional_saude_solicitante=identificador_profissional_saude_solicitante)
             sessao.commit()
             print(f'{now()} Atribuição feita.')
-        print(f"{now()} fim do cadastro.")
+        print(f"{now()} Fim do cadastro.")
         sessao.commit()
         # Checar se exame foi realmente criado no radius taas
 
