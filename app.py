@@ -173,7 +173,7 @@ for exame in exames_worklist:
                 # Cadastra Usuario
                 # Verificar se existe usuário relacionado ao identificador pessoa
                 usuario_buscado = UsuarioRepositorio() \
-                    .busca_user_por_id_pessoa(sessao=sessao, identificador_pessoa=identificador_nova_pessoa)
+                    .busca_por_login(sessao=sessao, login=login_solicitante)
                 if usuario_buscado:
                     print(
                         f"{now()} Usuário Existente. ID = {usuario_buscado.identificador}")

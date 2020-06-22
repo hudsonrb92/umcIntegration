@@ -7,3 +7,7 @@ class UsuarioQuery():
 
     def insere_usuario(self, sessao, usuario):
         sessao.add(usuario)
+
+    def busca_por_login(self, sessao, login):
+        usuario = sessao.query(UsuarioModel).filter_by(login=login).first
+        return usuario

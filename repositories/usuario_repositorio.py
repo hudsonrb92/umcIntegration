@@ -13,3 +13,7 @@ class UsuarioRepositorio():
     def busca_user_por_id_pessoa(self, sessao, identificador_pessoa):
         usuario = UsuarioQuery().get_usuario_by_identificador_pessoa(sessao, identificador_pessoa)
         return usuario
+
+    def busca_por_login(self, sessao, login):
+        usuario = UsuarioQuery().busca_por_login(sessao, login)
+        return usuario
